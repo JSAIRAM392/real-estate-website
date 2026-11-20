@@ -1,0 +1,277 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#f7f8f5" />
+    <meta name="description" content="Review your sold and occupied properties and their photos on Houzio." />
+    <title>Houzio — Property history</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+    <style>
+      .site-header .main-nav{gap:16px;align-items:center}
+      .main-nav a.active{color:var(--green);position:relative}
+      .main-nav a.active:after{content:"";position:absolute;left:0;right:0;bottom:-8px;height:2px;background:#718c6d}
+      .seller-dashboard{padding-top:42px;padding-bottom:45px}
+      .dashboard-heading{display:flex;justify-content:space-between;align-items:flex-end;gap:20px;margin:12px 0 25px}
+      .dashboard-heading h1{font-family:var(--display);font-size:clamp(35px,4.2vw,51px);font-weight:600;letter-spacing:-2.7px;margin:0 0 8px}
+      .dashboard-heading h1 em{font-family:var(--serif);font-weight:400;color:#718d6d;letter-spacing:-1.6px}
+      .dashboard-heading p,.dashboard-section-heading p{font-size:12px;color:#7f8a80;margin:0}
+      .dashboard-heading>.button{white-space:nowrap}
+      .dashboard-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px;margin-bottom:38px}
+      .dashboard-stats article{background:#fff;border:1px solid var(--line);border-radius:8px;padding:17px 19px;display:flex;flex-direction:column;gap:5px}
+      .dashboard-stats article>span{font-size:10px;font-weight:700;color:#718071}
+      .dashboard-stats article strong{font-family:var(--display);font-size:25px;letter-spacing:-.7px}
+      .dashboard-stats article small{font-size:9px;color:#919a92}
+      .dashboard-section-heading{display:flex;align-items:flex-end;justify-content:space-between;gap:15px;margin-bottom:15px}
+      .dashboard-section-heading h2{font-family:var(--display);font-size:19px;letter-spacing:-.5px;margin:0 0 5px}
+      .dashboard-section-heading .text-link{white-space:nowrap}
+      .seller-table-wrap{overflow-x:auto;background:#fff;border:1px solid var(--line);border-radius:8px}
+      .seller-table{width:100%;border-collapse:collapse;text-align:left;font-size:11px}
+      .seller-table th{background:#f7f9f6;color:#788579;font-size:9px;text-transform:uppercase;letter-spacing:.7px}
+      .seller-table th,.seller-table td{padding:14px 15px;border-bottom:1px solid #edf0ec}
+      .seller-table tbody tr:last-child td{border-bottom:0}
+      .seller-table td:first-child{min-width:190px}
+      .seller-table td:first-child strong,.seller-table td:first-child small{display:block}
+      .seller-table td:first-child strong{font-size:11px}
+      .seller-table td:first-child small{color:#8a948b;font-size:9px;margin-top:4px}
+      .seller-actions{white-space:nowrap}
+      .seller-action{border:1px solid #e4e9e3;background:#fff;border-radius:5px;padding:6px 9px;margin-right:5px;color:#526953;font-size:9px;font-weight:700;cursor:pointer}
+      .seller-action:hover{background:#eff3ed}
+      .seller-action-delete{color:#a65548}
+      .seller-action-delete:hover{background:#fff2ef}
+      .seller-status{display:inline-block;padding:5px 8px;border-radius:20px;font-size:9px;font-weight:700;white-space:nowrap}
+      .seller-status-active{background:#edf3e9;color:#57734f}
+      .seller-status-sold{background:#f2eee9;color:#816b56}
+      .seller-row-sold td:first-child strong{color:#7d847e}
+      .sold-notice{margin:12px 0 0;padding:10px;border-radius:6px;background:#f2eee9;color:#76644f;font-size:11px;text-align:center}
+      .history-photo-strip{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:5px;margin-top:8px}
+      .history-photo-strip img{width:100%;height:64px;object-fit:cover;border-radius:4px}
+      .history-samples{margin:28px 0 70px}
+      .history-samples-heading{margin-bottom:16px}
+      .history-samples-heading h2{font-family:var(--display);font-size:21px;letter-spacing:-.6px;margin:0 0 6px}
+      .history-samples-heading p{font-size:12px;color:#7f8a80;margin:0}
+      .history-sample-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+      .history-sample{overflow:hidden;background:#fff;border:1px solid var(--line);border-radius:8px}
+      .history-sample-photo{position:relative}
+      .history-sample img{display:block;width:100%;height:210px;object-fit:cover}
+      .history-sample-status{position:absolute;top:12px;left:12px;padding:7px 10px;border-radius:4px;background:#80684f;color:#fff;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;box-shadow:0 2px 8px #0003}
+      .history-sample:nth-child(2) .history-sample-status{background:#587458}
+      .history-sample>div{padding:13px 15px}
+      .history-sample h3{font-family:var(--display);font-size:14px;letter-spacing:-.3px;margin:0 0 5px}
+      .history-sample p{font-size:11px;color:#7f8a80;margin:0}
+      @media(max-width:980px){.history-sample-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+      @media(max-width:680px){.history-sample-grid{grid-template-columns:1fr}}
+      .reviews-page{padding:60px 0 80px}
+      .reviews-page h1{font-family:var(--display);font-size:clamp(38px,5vw,56px);letter-spacing:-2.7px;font-weight:600;margin:16px 0 10px}
+      .reviews-page h1 em{font-family:var(--serif);font-weight:400;color:#718d6d;letter-spacing:-1.6px}
+      .reviews-intro{max-width:640px;color:#7f8a80;font-size:13px;line-height:1.75;margin:0 0 30px}
+      .reviews-layout{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(280px,.85fr);gap:32px;align-items:start}
+      .review-list{display:grid;gap:12px}
+      .review-summary,.review-card,.review-form{background:#fff;border:1px solid var(--line);border-radius:8px;padding:20px}
+      .review-summary{display:flex;align-items:center;gap:15px;margin-bottom:14px}
+      .review-average{font-family:var(--display);font-size:34px;font-weight:700;letter-spacing:-1.5px}
+      .review-stars,.review-card-stars{color:#d39a45;letter-spacing:2px}
+      .review-summary small,.review-card small{display:block;color:#8b958c;font-size:10px;margin-top:3px}
+      .review-card h2{font-family:var(--display);font-size:14px;margin:10px 0 7px}
+      .review-card p{color:#748077;font-size:11px;line-height:1.75;margin:0}
+      .review-form h2{font-family:var(--display);font-size:18px;margin:0 0 5px}
+      .review-form>p{color:#89938b;font-size:10px;margin:0 0 18px}
+      .review-form label{display:block;font-size:10px;font-weight:700;color:#506054;margin:0 0 14px}
+      .review-form input:not([type=radio]),.review-form textarea{display:block;width:100%;border:1px solid #e4e9e3;border-radius:5px;padding:11px 12px;margin-top:7px;background:white;color:#34473a;font-size:11px;outline:none}
+      .review-form textarea{resize:vertical;line-height:1.6}
+      .review-form input:focus,.review-form textarea:focus{border-color:#91a88b;box-shadow:0 0 0 2px #eaf0e7}
+      .rating-options{display:flex;flex-direction:row-reverse;justify-content:flex-end;gap:5px;margin-top:7px}
+      .rating-options input{position:absolute;opacity:0;pointer-events:none}
+      .rating-options label{font-size:28px;line-height:1;color:#d9ded8;cursor:pointer;margin:0}
+      .rating-options label:hover,.rating-options label:hover~label,.rating-options input:checked~label{color:#d39a45}
+      .rating-options input:focus-visible+label{outline:2px solid #718c6d;outline-offset:3px;border-radius:3px}
+      .review-empty{background:#fff;border:1px dashed #dfe6dc;border-radius:8px;padding:24px;color:#879188;font-size:11px;text-align:center}
+      .review-message{font-size:11px;color:#577653;min-height:16px}
+      .creator-credit{display:block!important;width:auto!important;margin-left:auto;color:#78847a;font-size:10px;white-space:nowrap}
+      .creator-credit strong{color:var(--green);font-weight:700}
+      @media(max-width:980px){.site-header .main-nav{gap:12px}.reviews-layout{gap:20px}}
+      @media(max-width:680px){.site-header .main-nav{gap:8px 11px}.main-nav{font-size:9px}.reviews-page{padding:42px 0 55px}.reviews-page h1{font-size:39px}.reviews-layout{grid-template-columns:1fr;gap:14px}.review-form{order:-1}.review-summary,.review-card,.review-form{padding:16px}.footer-links{flex-wrap:wrap;gap:12px}.site-footer>.creator-credit{width:100%!important;text-align:right;margin-left:0}}
+      .dashboard-note{display:flex;align-items:flex-start;gap:9px;border-radius:7px;background:#edf1e9;padding:12px 15px;margin-top:16px;color:#7c897d}
+      .dashboard-note>span{font-size:14px}
+      .dashboard-note p{font-size:9px;line-height:1.55;margin:0}
+      .form-submit-row #cancel-edit{font-size:10px;padding:10px 12px;white-space:nowrap}
+      @media(max-width:980px){.site-header .main-nav{gap:10px}.main-nav-links{gap:12px}.portal-tab{padding-inline:10px}      .seller-dashboard{padding-top:35px}}
+      @media(max-width:680px){.site-header{row-gap:9px}.site-header .main-nav{order:3;width:100%;display:flex;flex-wrap:wrap;justify-content:center;gap:8px 12px;font-size:10px}.dashboard-heading{align-items:flex-start;flex-direction:column}.dashboard-heading h1{font-size:37px}.dashboard-heading>.button{width:100%}.dashboard-stats{grid-template-columns:1fr;gap:9px;margin-bottom:27px}.dashboard-stats article{display:grid;grid-template-columns:1fr auto;align-items:center;padding:12px 14px}.dashboard-stats article>span,.dashboard-stats article small{grid-column:1}.dashboard-stats article strong{grid-column:2;grid-row:1/3}.dashboard-section-heading{align-items:flex-start;flex-direction:column}.seller-table{min-width:670px}.form-submit-row #cancel-edit{width:100%}}
+    </style>
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="index.html" aria-label="Houzio home"><span class="brand-mark">h</span> houzio<span class="brand-period">.</span></a>
+      <nav class="main-nav" aria-label="Main navigation">
+        <a href="index.html" data-page-link="home">Home</a>
+        <a href="buy.html" data-page-link="listings">Buy</a>
+        <a href="rent.html" data-page-link="rent">Rent</a>
+        <a href="post.html" data-page-link="post">Post</a>
+        <a href="about.html" data-page-link="about">About</a>
+        <a href="contact.html" data-page-link="contact">Contact</a>
+        <a href="reviews.html" data-page-link="reviews">Reviews</a>
+        <a href="account.html" data-page-link="account">My Account</a>
+        <a href="history.html" data-page-link="history">History</a>
+      </nav>
+      <a class="button button-dark header-cta" href="post.html"><span>＋</span> Post property</a>
+    </header>
+
+    <main id="app">
+      <section id="home-page" class="page">
+        <section class="hero">
+          <div class="hero-copy">
+            <div class="eyebrow"><span class="eyebrow-line"></span> A better way to find your home</div>
+            <h1>Find a place<br />to <em>call your own.</em></h1>
+            <p class="hero-subtitle">Discover thoughtful homes for sale, meet real owners, and find a place that feels right.</p>
+            <div class="hero-search">
+              <form id="hero-search-form" class="search-fields">
+                <label class="search-location"><span class="search-icon">⌕</span><span class="field-stack"><span class="field-label">Where</span><input id="hero-location" type="search" placeholder="City, neighbourhood, or postcode" /></span></label>
+                <label class="search-type"><span class="field-stack"><span class="field-label">Property type</span><select id="hero-type"><option value="">Any property</option><option>Independent House</option><option>Apartment / Flat</option><option>Villa</option><option>Residential Plot / Land</option><option>Commercial Property</option></select></span></label>
+                <button class="button button-green search-submit" type="submit">Buy properties <span aria-hidden="true">→</span></button>
+              </form>
+            </div>
+            <div class="hero-note"><span class="avatar-stack"><i>R</i><i>A</i><i>M</i></span><span><strong>Good homes, good people.</strong><br />Buy directly from property owners.</span></div>
+          </div>
+          <div class="hero-visual">
+            <img class="hero-image" src="https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=1200&q=85" alt="Warm, sunlit living room in a modern home" />
+            <div class="image-stamp"><span class="stamp-spark">✳</span><span>Make yourself<br />at home</span></div>
+            <div class="hero-card"><span class="hero-card-icon">⌂</span><span><strong>Spaces with a little more soul</strong><small>Browse homes you'll love coming back to.</small></span><span class="hero-card-arrow">↗</span></div>
+            <span class="hero-deco deco-one">✳</span><span class="hero-deco deco-two">·</span>
+          </div>
+        </section>
+
+        <section class="featured-section content-width">
+          <div class="section-heading">
+            <div><div class="eyebrow"><span class="eyebrow-line"></span> Handpicked for you</div><h2>Places to <em>call your own.</em></h2></div>
+            <a class="text-link" href="buy.html">Browse properties <span>→</span></a>
+          </div>
+          <div id="featured-listings" class="listing-grid"></div>
+        </section>
+        <section class="owner-banner content-width">
+          <div class="owner-banner-icon">⌂</div><div><span class="eyebrow">YOUR PROPERTY, YOUR WAY</span><h2>Ready to find a buyer?</h2><p>Share your property and connect with buyers directly.</p></div><a class="button button-dark" href="post.html">Post property <span>→</span></a>
+        </section>
+      </section>
+
+      <section id="listings-page" class="page hidden">
+        <div class="listings-intro content-width">
+          <div class="eyebrow"><span class="eyebrow-line"></span> BUY DIRECT FROM OWNERS</div>
+          <h1>Find your <em>kind of place.</em></h1>
+          <p>Explore homes, land, and commercial properties for sale.</p>
+        </div>
+        <div class="listing-toolbar content-width">
+          <div class="listing-mode"><span class="mode-button active">Properties for sale</span></div>
+          <label class="sort-control">Sort by <select id="sort-select"><option value="recommended">Recommended</option><option value="low">Price: low to high</option><option value="high">Price: high to low</option></select></label>
+        </div>
+        <div class="results-layout content-width">
+          <aside class="filters-panel">
+            <div class="filter-head"><h2>Filters</h2><button id="clear-filters" type="button">Clear all</button></div>
+            <label class="filter-label" for="filter-location">Location</label><div class="filter-input-wrap"><span>⌕</span><input id="filter-location" type="search" placeholder="City or neighbourhood" /></div>
+            <label class="filter-label" for="filter-type">Property type</label><select class="filter-select" id="filter-type"><option value="">All property types</option><option>Independent House</option><option>Apartment / Flat</option><option>Villa</option><option>Residential Plot / Land</option><option>Commercial Property</option></select>
+            <label class="filter-label" for="filter-beds">Bedrooms</label><select class="filter-select" id="filter-beds"><option value="">Any number</option><option value="1">1+ bedroom</option><option value="2">2+ bedrooms</option><option value="3">3+ bedrooms</option><option value="4">4+ bedrooms</option></select>
+            <label class="filter-label" for="filter-area">Property area</label><select class="filter-select" id="filter-area"><option value="">Any size</option><option value="500">500+ sq ft</option><option value="1000">1,000+ sq ft</option><option value="1500">1,500+ sq ft</option><option value="2000">2,000+ sq ft</option></select>
+            <div class="price-filter-head"><label class="filter-label">Set your budget</label><span id="price-summary">₹10 lakh – ₹1 crore</span></div>
+            <div class="dual-range" id="dual-range">
+              <div class="range-track"><span class="range-selected" id="range-selected"></span></div>
+              <input id="price-min" type="range" min="1000000" max="10000000" step="100000" value="1000000" aria-label="Minimum price in rupees" />
+              <input id="price-max" type="range" min="1000000" max="10000000" step="100000" value="10000000" aria-label="Maximum price in rupees" />
+            </div>
+            <div class="range-values"><label>Minimum price <span id="min-label">₹10,00,000</span></label><label>Maximum price <span id="max-label">₹1,00,00,000</span></label></div>
+            <div class="filter-tip"><span>✳</span> Adjust the sliders to find a price that feels right.</div>
+          </aside>
+          <section class="results-content" aria-live="polite">
+            <div class="results-meta"><p id="results-count"></p><span>Listed directly by owners</span></div>
+            <div id="all-listings" class="listing-grid"></div>
+            <div id="empty-state" class="empty-state hidden"><span>⌂</span><h2>No homes found just yet</h2><p>Try widening your search or clearing a filter.</p><button class="button button-green" id="empty-clear" type="button">Clear filters</button></div>
+          </section>
+        </div>
+      </section>
+
+      <section id="history-page" class="page hidden">
+        <div class="listings-intro content-width">
+          <div class="eyebrow"><span class="eyebrow-line"></span> YOUR PROPERTY HISTORY</div>
+          <h1>Sold and <em>occupied.</em></h1>
+          <p>Listings marked sold or occupied are kept here with their photos.</p>
+        </div>
+        <div class="content-width">
+          <div id="history-listings" class="listing-grid"></div>
+          <div id="history-empty" class="empty-state hidden"><span>⌂</span><h2>No property history yet</h2><p>Listings you mark sold or occupied will appear here.</p></div>
+          <section id="history-samples" class="history-samples hidden" aria-label="Featured property photos">
+            <div class="history-samples-heading"><h2>A few homes from Houzio</h2><p>Example Sold and Occupied labels are shown here. Your own completed listings will appear above.</p></div>
+            <div id="history-sample-cards" class="history-sample-grid"></div>
+          </section>
+        </div>
+      </section>
+
+      <section id="detail-page" class="page hidden"><div id="detail-content" class="content-width"></div></section>
+
+      <section id="post-page" class="page hidden">
+        <div class="form-layout content-width">
+          <div class="form-intro"><div class="eyebrow"><span class="eyebrow-line"></span> A GOOD PLACE TO BEGIN</div><h1>Your place could be<br />someone's <em>next home.</em></h1><p>List your property for sale, rent, or both and connect directly with interested people.</p><div class="form-promise"><span>✳</span><div><strong>Simple, direct, and yours.</strong><br />You stay in control of your listing and who you speak to.</div></div></div>
+          <form id="post-form" class="property-form">
+            <div class="form-section"><div class="form-section-title"><span>01</span><div><h2 id="form-heading">Property details</h2><p>Tell people what makes your property special.</p></div></div>
+              <label>Property type<select name="type" required><option value="">Choose a property type</option><option>Independent House</option><option>Apartment / Flat</option><option>Villa</option><option>Residential Plot / Land</option><option>Commercial Property</option></select></label>
+              <label>Property title<input name="title" required maxlength="80" placeholder="e.g. 2 BHK Apartment in Indiranagar" /></label>
+              <label>Description<textarea name="description" required rows="4" placeholder="Describe the property, its features, and what makes it special."></textarea></label>
+              <label>Listing availability<select id="listing-type" name="listingType" required><option value="sale">For sale</option><option value="rent">For rent</option><option value="both">For sale and rent</option></select></label>
+              <label id="sale-price-field">Sale price <span class="label-hint">Enter the total asking price in Indian rupees</span><span class="price-entry"><span>₹</span><input id="sale-price" name="salePrice" type="number" min="1" step="1" required placeholder="75,00,000" /></span></label>
+              <label id="rent-price-field" class="hidden">Monthly rent <span class="label-hint">Enter the monthly rent in Indian rupees</span><span class="price-entry"><span>₹</span><input id="rent-price" name="rentPrice" type="number" min="1" step="1" placeholder="25,000" /></span></label>
+              <div class="form-row"><label>Bedrooms <span class="label-hint">Leave blank for land or commercial spaces</span><input name="beds" type="number" min="0" step="1" placeholder="e.g. 2" /></label><label>Bathrooms <span class="label-hint">Leave blank if not applicable</span><input name="baths" type="number" min="0" step="1" placeholder="e.g. 2" /></label></div>
+              <label>Property area (sq. ft.)<input name="area" type="number" min="1" step="1" required placeholder="e.g. 1,200" /></label>
+            </div>
+            <div class="form-section"><div class="form-section-title"><span>02</span><div><h2>Location & photos</h2><p>A good photo and a clear location go a long way.</p></div></div>
+              <label>Full property address<input name="address" required placeholder="House number, street, area, city, state, PIN code" /></label>
+              <label>City or neighbourhood <span class="label-hint">Used for search and the map when your exact address is private</span><input name="location" required placeholder="e.g. Indiranagar, Bengaluru" /></label>
+              <label>Google Maps location <span class="label-hint">Paste a Google Maps link or location pin</span><input name="mapLocation" type="url" placeholder="https://maps.google.com/..." /></label>
+              <label class="photo-upload"><span class="upload-icon">↑</span><strong>Add photos of your place</strong><small>Choose up to 6 images. JPG, PNG, or WEBP.</small><input name="photos" type="file" accept="image/*" multiple /><span class="button button-outline">Choose photos</span><span id="photo-names" class="photo-names"></span></label>
+              <label class="privacy-check"><input name="showAddress" type="checkbox" checked /><span><strong>Show my exact address publicly</strong><small>Turn this off to show only the approximate neighbourhood and share your full address when contacted.</small></span></label>
+            </div>
+            <div class="form-section"><div class="form-section-title"><span>03</span><div><h2>How to reach you</h2><p>Visitors can call you directly about your place.</p></div></div>
+              <div class="form-row"><label>Owner name<input name="owner" required placeholder="Your full name" /></label><label>Contact number<input name="phone" type="tel" required placeholder="+91 98765 43210" /></label></div>
+            </div>
+            <div class="form-submit-row"><p>By posting, you confirm that the information is accurate.</p><button class="button button-green" id="form-submit-button" type="submit">Preview your listing <span>→</span></button><button class="button button-outline hidden" id="cancel-edit" type="button">Cancel editing</button></div>
+            <p id="form-message" class="form-message" role="status"></p>
+          </form>
+        </div>
+      </section>
+
+      <section id="about-page" class="page hidden">
+        <div class="info-page content-width"><div class="eyebrow"><span class="eyebrow-line"></span> ABOUT HOUZIO</div><h1>A more personal way<br />to <em>find your place.</em></h1><p class="info-lead">Houzio brings property owners and buyers together with clear details, honest listings, and a direct line to the person who knows the place best.</p><div class="info-cards"><article><span>01</span><h2>Real properties</h2><p>Explore independent homes, apartments, villas, plots, and commercial properties listed for sale.</p></article><article><span>02</span><h2>Owner to buyer</h2><p>Ask questions and arrange a visit directly with the property owner—no mystery contacts.</p></article><article><span>03</span><h2>Your privacy matters</h2><p>Owners choose whether to show an exact address or share only the neighbourhood on the map.</p></article></div><a class="button button-green" href="buy.html">Browse properties <span>→</span></a></div>
+      </section>
+      <section id="contact-page" class="page hidden">
+        <div class="info-page content-width"><div class="eyebrow"><span class="eyebrow-line"></span> WE'RE HERE TO HELP</div><h1>Say <em>hello.</em></h1><p class="info-lead">Questions about a listing, posting your property, or using Houzio? Get in touch—we'd be happy to help.</p><div class="contact-info-card"><span class="owner-avatar">h</span><div><h2>Houzio Support</h2><p>For general enquiries and listing support</p><a href="mailto:hello@houzio.in">hello@houzio.in</a><a href="tel:+918000000000">+91 80 0000 0000</a></div></div><a class="button button-green" href="post.html">Post your property <span>→</span></a></div>
+      </section>
+      <section id="reviews-page" class="page hidden">
+        <div class="reviews-page content-width">
+          <div class="eyebrow"><span class="eyebrow-line"></span> YOUR EXPERIENCE MATTERS</div>
+          <h1>Reviews from the <em>community.</em></h1>
+          <p class="reviews-intro">Tell us how Houzio worked for you. Your feedback helps other buyers and owners—and helps us make the experience better.</p>
+          <div class="reviews-layout">
+            <section aria-label="Community reviews"><div id="review-summary" class="review-summary"></div><div id="review-list" class="review-list" aria-live="polite"></div></section>
+            <form id="review-form" class="review-form">
+              <h2>Share your review</h2><p>Let us know about your experience using Houzio.</p>
+              <label>Your name<input name="name" required maxlength="60" placeholder="How should we address you?" /></label>
+              <fieldset style="border:0;padding:0;margin:0 0 14px"><legend class="filter-label">Your rating</legend><div class="rating-options" role="radiogroup" aria-label="Rating from one to five stars"><input id="rating-5" name="rating" type="radio" value="5" required /><label for="rating-5" aria-label="5 stars">★</label><input id="rating-4" name="rating" type="radio" value="4" /><label for="rating-4" aria-label="4 stars">★</label><input id="rating-3" name="rating" type="radio" value="3" /><label for="rating-3" aria-label="3 stars">★</label><input id="rating-2" name="rating" type="radio" value="2" /><label for="rating-2" aria-label="2 stars">★</label><input id="rating-1" name="rating" type="radio" value="1" /><label for="rating-1" aria-label="1 star">★</label></div></fieldset>
+              <label>Your review<textarea name="message" rows="5" required maxlength="1000" placeholder="What went well? What could we improve?"></textarea></label>
+              <button class="button button-green" type="submit">Submit review <span>→</span></button><p id="review-message" class="review-message" role="status"></p>
+            </form>
+          </div>
+        </div>
+      </section>
+      <section id="account-page" class="page hidden">
+        <div class="seller-dashboard content-width">
+          <div class="eyebrow"><span class="eyebrow-line"></span> MY ACCOUNT · SELLER WORKSPACE</div>
+          <div class="dashboard-heading"><div><h1>Your property <em>dashboard.</em></h1><p>Review your listings, make updates, or see how they look to buyers and renters.</p></div><a class="button button-green" href="post.html">＋ Post a property</a></div>
+          <div class="dashboard-stats"><article><span>Your listings</span><strong id="seller-listing-count">0</strong><small>Properties posted from this browser</small></article><article><span>Active listings</span><strong id="seller-active-count">0</strong><small>Visible in matching searches</small></article><article><span>Listing experience</span><strong>Live</strong><small>Browse listings and contact owners</small></article></div>
+          <div class="dashboard-section-heading"><div><h2>Manage your properties</h2><p>Mark sale listings sold or rentals occupied; those statuses move to your property history.</p></div><a class="text-link" href="buy.html">View sale listings <span>→</span></a></div>
+          <div id="seller-listings" class="seller-listings"></div>
+          <aside class="dashboard-note"><span>ⓘ</span><p>This dashboard currently saves listings in this browser. It is a front-end preview, not a connected server or shared database.</p></aside>
+        </div>
+      </section>
+    </main>
+    <footer class="site-footer"><a class="brand" href="index.html"><span class="brand-mark">h</span> houzio<span class="brand-period">.</span></a><span>Good homes bring us together.</span><div class="footer-links"><a href="about.html">About</a><a href="contact.html">Contact</a><a href="reviews.html">Reviews</a><a href="post.html">Post a property</a></div><span class="creator-credit">Created by <strong>J.Sai Ram</strong></span></footer>
+    <script src="app.js"></script>
+  </body>
+</html>
